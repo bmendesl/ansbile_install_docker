@@ -1,0 +1,7 @@
+---
+# tasks file for docker
+- name: Base installation packages
+  include_tasks: confbase.yml
+
+#- name: Installing Docker
+#  include_tasks: docker.yml

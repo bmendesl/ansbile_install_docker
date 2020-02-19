@@ -1,0 +1,42 @@
+---      
+- name: Including variables
+  include_vars: "{{ item }}"
+  loop:
+    - docker_vars.yml
+
+- name: Add Docker repo
+  get_url:
+    url: "{{ vars_docker.docker_url }}"
+    dest: "{{ vars_docker.docker_dest }}"
+    mode: 0755
+
+- name: Enable Docker Edge repo
+  ini_file:
+    dest: "{{ vars_docker.docker_dest }}"
+    section: 'docker-ce-edge'
+    option: enabled
+    value: 0
+
+- name: Enable Docker Test repo
+  ini_file:
+    dest: "{{ vars_docker.docker_dest }}"
+    section: 'docker-ce-test'
+    option: enabled
+    value: 0
+
+- name: Install Docker
+  package:
+    name: docker-ce
+    state: latest
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Add user vagrant to docker group
+  user:
+    name: vagrant
+    groups: docker
+    append: yes

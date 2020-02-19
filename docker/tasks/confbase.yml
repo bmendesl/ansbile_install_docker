@@ -1,0 +1,19 @@
+---      
+- name: Including variables
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ ansible_os_family }}.yml"
+    - docker.yml
+
+- name: Removing old docker versions
+  when: ansible_os_family == 'RedHat'
+  yum:
+    name: "{{ pkgs_docker }}"
+    state: removed
+    update_cache: yes
+
+- name: Installing base packages for docker
+  when: ansible_os_family == 'RedHat'
+  yum:   
+    name: "{{ pkgs_redhat }}"
+    state: latest
